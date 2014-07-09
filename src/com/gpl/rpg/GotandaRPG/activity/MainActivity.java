@@ -2,6 +2,8 @@ package com.gpl.rpg.GotandaRPG.activity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.*;
 import android.view.ContextMenu.ContextMenuInfo;
@@ -9,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.gpl.rpg.GotandaRPG.GotandaRPGApplication;
 import com.gpl.rpg.GotandaRPG.GotandaRPGPreferences;
 import com.gpl.rpg.GotandaRPG.Dialogs;
@@ -101,6 +104,7 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		toolboxview.bringToFront();
 		combatview.bringToFront();
 		statusview.bringToFront();
+		
 	}
 
 	@Override
@@ -140,6 +144,10 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		super.onStart();
 		if (!GotandaRPGApplication.getApplicationFromActivity(this).getWorldSetup().isSceneReady) return;
 		subscribeToModelChanges();
+
+		//takimoto opening music.
+//		http://dev.classmethod.jp/smartphone/android/android-tips-48-soundpool-mediaplayer/
+		//playFromMediaPlayer(); 
 	}
 
 	@Override
@@ -427,5 +435,12 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	@Override
 	public void onPlayerDoesNotHaveEnoughAP() {
 		message(getString(R.string.combat_not_enough_ap));
+	}
+
+//	Uri music;
+//	music = R.raw.opening;
+	private void playFromMediaPlayer() {
+	    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.opening);
+	    mediaPlayer.start();
 	}
 }

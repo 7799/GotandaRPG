@@ -95,18 +95,33 @@ public final class Player extends Actor {
 
 	public void initializeNewPlayer(ItemTypeCollection types, DropListCollection dropLists, String name) {
 		baseTraits.iconID = TileManager.CHAR_HERO;
-		baseTraits.maxAP = 10;
-		baseTraits.maxHP = 25;
-		baseTraits.moveCost = 6;
+
+		//baseTraits.maxAP = 10;
+		//baseTraits.maxHP = 25;
+		//baseTraits.moveCost = 6;
+		//baseTraits.attackCost = DEFAULT_PLAYER_ATTACKCOST;
+		//baseTraits.attackChance = 60;
+		//baseTraits.criticalSkill = 0;
+		//baseTraits.criticalMultiplier = 1;
+		//baseTraits.damagePotential.set(1, 1);
+		//baseTraits.blockChance = 0;
+		//baseTraits.damageResistance = 0;
+		//baseTraits.useItemCost = 5;
+		//baseTraits.reequipCost = 5;
+
+		baseTraits.maxAP = 1000;
+		baseTraits.maxHP = 2500;
+		baseTraits.moveCost = 1;
 		baseTraits.attackCost = DEFAULT_PLAYER_ATTACKCOST;
-		baseTraits.attackChance = 60;
-		baseTraits.criticalSkill = 0;
+		baseTraits.attackChance = 99;
+		baseTraits.criticalSkill = 60;
 		baseTraits.criticalMultiplier = 1;
 		baseTraits.damagePotential.set(1, 1);
-		baseTraits.blockChance = 0;
-		baseTraits.damageResistance = 0;
-		baseTraits.useItemCost = 5;
-		baseTraits.reequipCost = 5;
+		baseTraits.blockChance = 50;
+		baseTraits.damageResistance = 50;
+		baseTraits.useItemCost = 1;
+		baseTraits.reequipCost = 1;
+
 		this.name = name;
 		this.level = 1;
 		this.totalExperience = 1;
