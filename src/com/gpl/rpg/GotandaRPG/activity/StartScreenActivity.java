@@ -147,8 +147,6 @@ public final class StartScreenActivity extends Activity {
 		mBgm.seekTo(4000);
 		mBgm.start();
 		
-		
-		
 //		Context ct = this;
 //		GameMusic music = new GameMusic(ct , R.raw.opening);
 //		music.GameMusicPlay();
@@ -267,10 +265,16 @@ public final class StartScreenActivity extends Activity {
 	}
 
 	@Override
+	protected void onPause() {
+		super.onPause();
+	
+	//taki	
+	mBgm.stop();
+	}
+	@Override
 	protected void onStop() {
 	super.onStop();
 	Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
-	mBgm.stop();
 	}
 	
 

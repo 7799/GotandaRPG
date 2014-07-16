@@ -58,6 +58,7 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	private TextView statusText;
 	private WeakReference<Toast> lastToast = null;
 	private ContextMenuInfo lastSelectedMenu = null;
+		MediaPlayer mBgm;	//taki
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -163,6 +164,9 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		controllers.movementController.stopMovement();
 
 		save(Savegames.SLOT_QUICKSAVE);
+	
+	//taki	
+	mBgm.stop();
 	}
 
 	@Override
@@ -177,6 +181,19 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 			controllers.combatController.enterCombat(CombatController.BEGIN_TURN_CONTINUE);
 		}
 		updateStatus();
+		
+		
+//taki	
+//		MediaPlayer mBgm;
+		mBgm = MediaPlayer.create(this, R.raw.nokia);
+		mBgm.setLooping(true);
+//		mBgm.setVolume(1.0f, 1.0f);
+		mBgm.seekTo(4000);
+		mBgm.start();
+		
+//		Context ct = this;
+//		GameMusic music = new GameMusic(ct , R.raw.opening);
+//		music.GameMusicPlay();
 	}
 
 	private void unsubscribeFromModel() {
@@ -437,12 +454,11 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		message(getString(R.string.combat_not_enough_ap));
 	}
 
-
 //taki    
 //	Uri music;
 //	music = R.raw.opening;
-	private void playFromMediaPlayer() {
-	    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.opening);
-	    mediaPlayer.start();
-	}
+//	private void playFromMediaPlayer() {
+//	    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.opening);
+//	    mediaPlayer.start();
+//	}
 }
