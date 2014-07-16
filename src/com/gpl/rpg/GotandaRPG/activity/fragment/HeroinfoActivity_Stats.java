@@ -95,7 +95,7 @@ public final class HeroinfoActivity_Stats extends Fragment {
 				// We disable the button temporarily, so that there is no possibility
 				// of clicking it again before the levelup activity has started.
 				// See issue:
-				// http://code.google.com/p/andors-trail/issues/detail?id=42
+				// http://code.google.com/p/gotanda-trail/issues/detail?id=42
 				levelUpButton.setEnabled(false);
 			}
 		});

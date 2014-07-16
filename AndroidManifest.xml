@@ -8,8 +8,8 @@
 	android:installLocation="auto"
 	>
 	<uses-sdk 
-		android:minSdkVersion="4" 
-		android:targetSdkVersion="17"
+		android:minSdkVersion="11" 
+		android:targetSdkVersion="16"
 		/>
 	
 	<supports-screens

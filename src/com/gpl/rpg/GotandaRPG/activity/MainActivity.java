@@ -437,6 +437,8 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		message(getString(R.string.combat_not_enough_ap));
 	}
 
+
+//taki    
 //	Uri music;
 //	music = R.raw.opening;
 	private void playFromMediaPlayer() {

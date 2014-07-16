@@ -123,7 +123,7 @@
 		</LinearLayout>
 	</ScrollView>
 
-	<!-- Workaround http://code.google.com/p/andors-trail/issues/detail?id=242 -->
+	<!-- Workaround http://code.google.com/p/gotanda-trail/issues/detail?id=242 -->
 	<ListView android:layout_width="match_parent" android:layout_height="wrap_content" />
 
 	<LinearLayout

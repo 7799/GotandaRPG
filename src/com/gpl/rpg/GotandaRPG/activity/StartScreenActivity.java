@@ -1,6 +1,7 @@
 package com.gpl.rpg.GotandaRPG.activity;
 
 import android.widget.*;
+
 import com.gpl.rpg.GotandaRPG.GotandaRPGApplication;
 import com.gpl.rpg.GotandaRPG.GotandaRPGPreferences;
 import com.gpl.rpg.GotandaRPG.Dialogs;
@@ -10,14 +11,17 @@ import com.gpl.rpg.GotandaRPG.WorldSetup;
 import com.gpl.rpg.GotandaRPG.savegames.Savegames.FileHeader;
 import com.gpl.rpg.GotandaRPG.controller.Constants;
 import com.gpl.rpg.GotandaRPG.resource.tiles.TileManager;
+import com.gpl.rpg.GotandaRPG.BgmPlay.GameMusic;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.res.Resources;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +37,10 @@ public final class StartScreenActivity extends Activity {
 	private Button startscreen_load;
 	private TextView startscreen_currenthero;
 	private EditText startscreen_enterheroname;
+	
+	
+
+		MediaPlayer mBgm;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +139,21 @@ public final class StartScreenActivity extends Activity {
 	@Override
 	protected void onResume() {
 		super.onResume();
-
+//taki	
+//		MediaPlayer mBgm;
+		mBgm = MediaPlayer.create(this, R.raw.opening);
+//		mBgm.setLooping(true);
+//		mBgm.setVolume(1.0f, 1.0f);
+		mBgm.seekTo(4000);
+		mBgm.start();
+		
+		
+		
+//		Context ct = this;
+//		GameMusic music = new GameMusic(ct , R.raw.opening);
+//		music.GameMusicPlay();
+		
+		
 		String playerName;
 		String displayInfo = null;
 
@@ -231,4 +253,25 @@ public final class StartScreenActivity extends Activity {
 		.setNegativeButton(android.R.string.cancel, null)
 		.create().show();
 	}
+	
+	@Override
+	protected void onRestart() {
+	super.onRestart();
+	Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	protected void onStart() {
+	super.onStart();
+	Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
+	}
+
+	@Override
+	protected void onStop() {
+	super.onStop();
+	Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
+	mBgm.stop();
+	}
+	
+
 }
