@@ -24,6 +24,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 
+import example.midiappli.*;
+
 public final class StartScreenActivity extends Activity {
 
 	public static final int INTENTREQUEST_PREFERENCES = 7;
@@ -36,8 +38,8 @@ public final class StartScreenActivity extends Activity {
 	private TextView startscreen_currenthero;
 	private EditText startscreen_enterheroname;
 
-	// MediaPlayer mBgm;
-	GameMusic music;
+//	GameMusic music;	//keep1
+		example.midiappli.PlayMidi emP = new PlayMidi("");
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -129,6 +131,7 @@ public final class StartScreenActivity extends Activity {
 		} else if (GotandaRPGApplication.DEVELOPMENT_FORCE_CONTINUEGAME) {
 			continueGame(false, Savegames.SLOT_QUICKSAVE, null);
 		}
+		emP.BgmPlay("");	//keep2
 	}
 
 	private void updatePreferences() {
@@ -153,8 +156,13 @@ public final class StartScreenActivity extends Activity {
 
 		// Context ct = getBaseContext();
 		// music = new GameMusic(ct , R.raw.opening);
-		music = new GameMusic(getBaseContext(), R.raw.opening);
-		music.GameMusic("Start");
+		
+		//keep1
+//		music = new GameMusic(getBaseContext(), R.raw.opening);
+//		music.GameMusic("Start");
+		
+		emP.BgmPlay("");
+		
 
 		String playerName;
 		String displayInfo = null;
@@ -269,12 +277,14 @@ public final class StartScreenActivity extends Activity {
 	protected void onRestart() {
 		super.onRestart();
 		Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
+		emP.BgmPlay("");	//keep2
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
+		emP.BgmPlay("");	//keep2
 	}
 
 	@Override
@@ -284,8 +294,10 @@ public final class StartScreenActivity extends Activity {
 		// taki
 		// if (mBgm!=null)
 		// mBgm.stop();
-		music.GameMusicStop();
 		// music.GameMusic("Stop");
+		
+//		music.GameMusicStop();	//keep1
+			emP.BgmStop();
 	}
 
 	@Override
@@ -295,8 +307,10 @@ public final class StartScreenActivity extends Activity {
 		// taki
 		// if (mBgm!=null)
 		// mBgm.stop();
-		music.GameMusicStop();
 		// music.GameMusic("Stop");
+		
+			emP.BgmStop();
+//		music.GameMusicStop();	//keep1
 	}
 
 }

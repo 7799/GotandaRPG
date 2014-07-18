@@ -1,6 +1,6 @@
 package com.gpl.rpg.GotandaRPG.BgmPlay;
 
-import com.gpl.rpg.GotandaRPG.R;
+//import com.gpl.rpg.GotandaRPG.R;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,7 +24,7 @@ public class GameMusic extends Activity {
 		this.mBgm = MediaPlayer.create(con, title);
 	}
 
-	public void GameMusic(String que) {
+	public static void GameMusic(String que) {
 		if (que == "Stop")
 			mBgm.stop();
 

@@ -36,10 +36,14 @@ import com.gpl.rpg.GotandaRPG.util.Coord;
 import com.gpl.rpg.GotandaRPG.view.*;
 import com.gpl.rpg.GotandaRPG.view.QuickButton.QuickButtonContextMenuInfo;
 
+import example.midiappli.PlayMidi;
+
 import java.lang.ref.WeakReference;
 import java.util.Collection;
 
-public final class MainActivity extends Activity implements PlayerMovementListener, CombatActionListener, CombatTurnListener, WorldEventListener {
+public final class MainActivity extends Activity implements
+		PlayerMovementListener, CombatActionListener, CombatTurnListener,
+		WorldEventListener {
 
 	public static final int INTENTREQUEST_MONSTERENCOUNTER = 2;
 	public static final int INTENTREQUEST_CONVERSATION = 4;
@@ -58,14 +62,19 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	private TextView statusText;
 	private WeakReference<Toast> lastToast = null;
 	private ContextMenuInfo lastSelectedMenu = null;
-		MediaPlayer mBgm;	//taki
+	// MediaPlayer mBgm; //taki
+	example.midiappli.PlayMidi emP = new PlayMidi("field");
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		GotandaRPGApplication app = GotandaRPGApplication.getApplicationFromActivity(this);
-		if (!app.isInitialized()) { finish(); return; }
+		GotandaRPGApplication app = GotandaRPGApplication
+				.getApplicationFromActivity(this);
+		if (!app.isInitialized()) {
+			finish();
+			return;
+		}
 		GotandaRPGPreferences preferences = app.getPreferences();
 		this.world = app.getWorld();
 		this.controllers = app.getControllerContext();
@@ -76,7 +85,9 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		statusview = (StatusView) findViewById(R.id.main_statusview);
 		combatview = (CombatView) findViewById(R.id.main_combatview);
 		quickitemview = (QuickitemView) findViewById(R.id.main_quickitemview);
-		activeConditions = new DisplayActiveActorConditionIcons(controllers, world, this, (RelativeLayout) findViewById(R.id.statusview_activeconditions));
+		activeConditions = new DisplayActiveActorConditionIcons(controllers,
+				world, this,
+				(RelativeLayout) findViewById(R.id.statusview_activeconditions));
 		VirtualDpadView dpad = (VirtualDpadView) findViewById(R.id.main_virtual_dpad);
 		toolboxview = (ToolboxView) findViewById(R.id.main_toolboxview);
 		statusview.registerToolboxViews(toolboxview, quickitemview);
@@ -105,7 +116,7 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		toolboxview.bringToFront();
 		combatview.bringToFront();
 		statusview.bringToFront();
-		
+
 	}
 
 	@Override
@@ -114,22 +125,30 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		switch (requestCode) {
 		case INTENTREQUEST_MONSTERENCOUNTER:
 			if (resultCode == Activity.RESULT_OK) {
-				controllers.combatController.enterCombat(CombatController.BEGIN_TURN_PLAYER);
+				controllers.combatController
+						.enterCombat(CombatController.BEGIN_TURN_PLAYER);
 			} else {
 				controllers.combatController.exitCombat(false);
 			}
 			break;
 		case INTENTREQUEST_CONVERSATION:
-			MovementController.refreshMonsterAggressiveness(world.model.currentMap, world.model.player);
-			controllers.mapController.applyCurrentMapReplacements(getResources(), true);
+			MovementController.refreshMonsterAggressiveness(
+					world.model.currentMap, world.model.player);
+			controllers.mapController.applyCurrentMapReplacements(
+					getResources(), true);
 			break;
 		case INTENTREQUEST_SAVEGAME:
-			if (resultCode != Activity.RESULT_OK) break;
+			if (resultCode != Activity.RESULT_OK)
+				break;
 			final int slot = data.getIntExtra("slot", 1);
 			if (save(slot)) {
-				Toast.makeText(this, getResources().getString(R.string.menu_save_gamesaved, slot), Toast.LENGTH_SHORT).show();
+				Toast.makeText(
+						this,
+						getResources().getString(R.string.menu_save_gamesaved,
+								slot), Toast.LENGTH_SHORT).show();
 			} else {
-				Toast.makeText(this, R.string.menu_save_failed, Toast.LENGTH_LONG).show();
+				Toast.makeText(this, R.string.menu_save_failed,
+						Toast.LENGTH_LONG).show();
 			}
 			break;
 		}
@@ -137,18 +156,26 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 
 	private boolean save(int slot) {
 		final Player player = world.model.player;
-		return Savegames.saveWorld(world, this, slot, getString(R.string.savegame_currenthero_displayinfo, player.getLevel(), player.getTotalExperience(), player.getGold()));
+		return Savegames.saveWorld(
+				world,
+				this,
+				slot,
+				getString(R.string.savegame_currenthero_displayinfo,
+						player.getLevel(), player.getTotalExperience(),
+						player.getGold()));
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
-		if (!GotandaRPGApplication.getApplicationFromActivity(this).getWorldSetup().isSceneReady) return;
+		if (!GotandaRPGApplication.getApplicationFromActivity(this)
+				.getWorldSetup().isSceneReady)
+			return;
 		subscribeToModelChanges();
 
-		//takimoto opening music.
-//		http://dev.classmethod.jp/smartphone/android/android-tips-48-soundpool-mediaplayer/
-		//playFromMediaPlayer(); 
+		// takimoto opening music.
+		// http://dev.classmethod.jp/smartphone/android/android-tips-48-soundpool-mediaplayer/
+		// playFromMediaPlayer();
 	}
 
 	@Override
@@ -164,36 +191,42 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		controllers.movementController.stopMovement();
 
 		save(Savegames.SLOT_QUICKSAVE);
-	
-	//taki	
-	mBgm.stop();
+
+		// taki mBgm.stop();
+		emP.BgmStop();
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		if (!GotandaRPGApplication.getApplicationFromActivity(this).getWorldSetup().isSceneReady) return;
+		if (!GotandaRPGApplication.getApplicationFromActivity(this)
+				.getWorldSetup().isSceneReady)
+			return;
 
 		controllers.gameRoundController.resume();
 
 		if (world.model.uiSelections.isInCombat) {
-			controllers.combatController.setCombatSelection(world.model.uiSelections.selectedMonster, world.model.uiSelections.selectedPosition);
-			controllers.combatController.enterCombat(CombatController.BEGIN_TURN_CONTINUE);
+			controllers.combatController.setCombatSelection(
+					world.model.uiSelections.selectedMonster,
+					world.model.uiSelections.selectedPosition);
+			controllers.combatController
+					.enterCombat(CombatController.BEGIN_TURN_CONTINUE);
 		}
 		updateStatus();
+
+		// taki
+		// mBgm = MediaPlayer.create(this, R.raw.nokia);
+		// mBgm.setLooping(true);
+		// // mBgm.setVolume(1.0f, 1.0f);
+		// mBgm.seekTo(4000);
+		// mBgm.start();
+
+		// Context ct = this;
+		// GameMusic music = new GameMusic(ct , R.raw.opening);
+		// music.GameMusicPlay();
+		emP.BgmPlay("field");
 		
-		
-//taki	
-//		MediaPlayer mBgm;
-		mBgm = MediaPlayer.create(this, R.raw.nokia);
-		mBgm.setLooping(true);
-//		mBgm.setVolume(1.0f, 1.0f);
-		mBgm.seekTo(4000);
-		mBgm.start();
-		
-//		Context ct = this;
-//		GameMusic music = new GameMusic(ct , R.raw.opening);
-//		music.GameMusicPlay();
 	}
 
 	private void unsubscribeFromModel() {
@@ -221,33 +254,39 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	}
 
 	@Override
-	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+	public void onCreateContextMenu(ContextMenu menu, View v,
+			ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
-		if(quickitemview.isQuickButtonId(v.getId())){
+		if (quickitemview.isQuickButtonId(v.getId())) {
 			createQuickButtonMenu(menu);
 		}
 		lastSelectedMenu = null;
 	}
 
-	private void createQuickButtonMenu(ContextMenu menu){
-		menu.add(Menu.NONE, R.id.quick_menu_unassign, Menu.NONE, R.string.inventory_unassign);
-		SubMenu assignMenu = menu.addSubMenu(Menu.NONE, R.id.quick_menu_assign, Menu.NONE, R.string.inventory_assign);
-		for(int i=0; i<world.model.player.inventory.items.size(); ++i){
+	private void createQuickButtonMenu(ContextMenu menu) {
+		menu.add(Menu.NONE, R.id.quick_menu_unassign, Menu.NONE,
+				R.string.inventory_unassign);
+		SubMenu assignMenu = menu.addSubMenu(Menu.NONE, R.id.quick_menu_assign,
+				Menu.NONE, R.string.inventory_assign);
+		for (int i = 0; i < world.model.player.inventory.items.size(); ++i) {
 			ItemEntry itemEntry = world.model.player.inventory.items.get(i);
-			if(itemEntry.itemType.isUsable())
-				assignMenu.add(R.id.quick_menu_assign_group, i, Menu.NONE, itemEntry.itemType.getName(world.model.player));
+			if (itemEntry.itemType.isUsable())
+				assignMenu.add(R.id.quick_menu_assign_group, i, Menu.NONE,
+						itemEntry.itemType.getName(world.model.player));
 		}
 	}
 
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		QuickButtonContextMenuInfo menuInfo;
-		if(item.getGroupId() == R.id.quick_menu_assign_group){
+		if (item.getGroupId() == R.id.quick_menu_assign_group) {
 			menuInfo = (QuickButtonContextMenuInfo) lastSelectedMenu;
-			controllers.itemController.setQuickItem(world.model.player.inventory.items.get(item.getItemId()).itemType, menuInfo.index);
+			controllers.itemController
+					.setQuickItem(world.model.player.inventory.items.get(item
+							.getItemId()).itemType, menuInfo.index);
 			return true;
 		}
-		switch(item.getItemId()){
+		switch (item.getItemId()) {
 		case R.id.quick_menu_unassign:
 			menuInfo = (QuickButtonContextMenuInfo) item.getMenuInfo();
 			controllers.itemController.setQuickItem(null, menuInfo.index);
@@ -281,10 +320,13 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	}
 
 	private void showToast(String msg, int duration) {
-		if (msg == null) return;
-		if (msg.length() == 0) return;
+		if (msg == null)
+			return;
+		if (msg.length() == 0)
+			return;
 		Toast t = null;
-		if (lastToast != null) t = lastToast.get();
+		if (lastToast != null)
+			t = lastToast.get();
 		if (t == null) {
 			t = Toast.makeText(this, msg, duration);
 			lastToast = new WeakReference<Toast>(t);
@@ -295,12 +337,13 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		t.show();
 	}
 
+	@Override
+	public void onPlayerMoved(Coord newPosition, Coord previousPosition) {
+	}
 
 	@Override
-	public void onPlayerMoved(Coord newPosition, Coord previousPosition) { }
-
-	@Override
-	public void onPlayerEnteredNewMap(PredefinedMap map, Coord p) { }
+	public void onPlayerEnteredNewMap(PredefinedMap map, Coord p) {
+	}
 
 	@Override
 	public void onCombatStarted() {
@@ -321,27 +364,35 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	public void onPlayerAttackSuccess(Monster target, AttackResult attackResult) {
 		final String monsterName = target.getName();
 		if (attackResult.isCriticalHit) {
-			message(getString(R.string.combat_result_herohitcritical, monsterName, attackResult.damage));
+			message(getString(R.string.combat_result_herohitcritical,
+					monsterName, attackResult.damage));
 		} else {
-			message(getString(R.string.combat_result_herohit, monsterName, attackResult.damage));
+			message(getString(R.string.combat_result_herohit, monsterName,
+					attackResult.damage));
 		}
 		if (attackResult.targetDied) {
-			message(getString(R.string.combat_result_herokillsmonster, monsterName, attackResult.damage));
+			message(getString(R.string.combat_result_herokillsmonster,
+					monsterName, attackResult.damage));
 		}
 	}
 
 	@Override
-	public void onMonsterAttackMissed(Monster attacker, AttackResult attackResult) {
-		message(getString(R.string.combat_result_monstermiss, attacker.getName()));
+	public void onMonsterAttackMissed(Monster attacker,
+			AttackResult attackResult) {
+		message(getString(R.string.combat_result_monstermiss,
+				attacker.getName()));
 	}
 
 	@Override
-	public void onMonsterAttackSuccess(Monster attacker, AttackResult attackResult) {
+	public void onMonsterAttackSuccess(Monster attacker,
+			AttackResult attackResult) {
 		final String monsterName = attacker.getName();
 		if (attackResult.isCriticalHit) {
-			message(getString(R.string.combat_result_monsterhitcritical, monsterName, attackResult.damage));
+			message(getString(R.string.combat_result_monsterhitcritical,
+					monsterName, attackResult.damage));
 		} else {
-			message(getString(R.string.combat_result_monsterhit, monsterName, attackResult.damage));
+			message(getString(R.string.combat_result_monsterhit, monsterName,
+					attackResult.damage));
 		}
 	}
 
@@ -352,13 +403,16 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	}
 
 	@Override
-	public void onPlayerKilledMonster(Monster target) { }
+	public void onPlayerKilledMonster(Monster target) {
+	}
 
 	@Override
-	public void onNewPlayerTurn() { }
+	public void onNewPlayerTurn() {
+	}
 
 	@Override
-	public void onMonsterIsAttacking(Monster m) { }
+	public void onMonsterIsAttacking(Monster m) {
+	}
 
 	@Override
 	public void onPlayerStartedConversation(Monster m, String phraseID) {
@@ -393,8 +447,10 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 
 	@Override
 	public void onPlayerPickedUpGroundLoot(Loot loot) {
-		if (controllers.preferences.displayLoot == GotandaRPGPreferences.DISPLAYLOOT_NONE) return;
-		if (!showToastForPickedUpItems(loot)) return;
+		if (controllers.preferences.displayLoot == GotandaRPGPreferences.DISPLAYLOOT_NONE)
+			return;
+		if (!showToastForPickedUpItems(loot))
+			return;
 
 		final String msg = Dialogs.getGroundLootPickedUpMessage(this, loot);
 		showToast(msg, Toast.LENGTH_LONG);
@@ -402,11 +458,11 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 
 	private boolean showToastForPickedUpItems(Loot loot) {
 		switch (controllers.preferences.displayLoot) {
-			case GotandaRPGPreferences.DISPLAYLOOT_TOAST:
-			case GotandaRPGPreferences.DISPLAYLOOT_DIALOG_FOR_ITEMS_ELSE_TOAST:
-				return true;
-			case GotandaRPGPreferences.DISPLAYLOOT_TOAST_FOR_ITEMS:
-				return loot.hasItems();
+		case GotandaRPGPreferences.DISPLAYLOOT_TOAST:
+		case GotandaRPGPreferences.DISPLAYLOOT_DIALOG_FOR_ITEMS_ELSE_TOAST:
+			return true;
+		case GotandaRPGPreferences.DISPLAYLOOT_TOAST_FOR_ITEMS:
+			return loot.hasItems();
 		}
 		return false;
 	}
@@ -414,18 +470,23 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 	@Override
 	public void onPlayerFoundMonsterLoot(Collection<Loot> loot, int exp) {
 		final Loot combinedLoot = Loot.combine(loot);
-		final String msg = Dialogs.getMonsterLootFoundMessage(this, combinedLoot, exp);
-		Dialogs.showMonsterLoot(this, controllers, world, loot, combinedLoot, msg);
+		final String msg = Dialogs.getMonsterLootFoundMessage(this,
+				combinedLoot, exp);
+		Dialogs.showMonsterLoot(this, controllers, world, loot, combinedLoot,
+				msg);
 	}
 
 	@Override
 	public void onPlayerPickedUpMonsterLoot(Collection<Loot> loot, int exp) {
-		if (controllers.preferences.displayLoot == GotandaRPGPreferences.DISPLAYLOOT_NONE) return;
+		if (controllers.preferences.displayLoot == GotandaRPGPreferences.DISPLAYLOOT_NONE)
+			return;
 
 		final Loot combinedLoot = Loot.combine(loot);
-		if (!showToastForPickedUpItems(combinedLoot)) return;
+		if (!showToastForPickedUpItems(combinedLoot))
+			return;
 
-		final String msg = Dialogs.getMonsterLootPickedUpMessage(this, combinedLoot, exp);
+		final String msg = Dialogs.getMonsterLootPickedUpMessage(this,
+				combinedLoot, exp);
 		showToast(msg, Toast.LENGTH_LONG);
 	}
 
@@ -454,11 +515,12 @@ public final class MainActivity extends Activity implements PlayerMovementListen
 		message(getString(R.string.combat_not_enough_ap));
 	}
 
-//taki    
-//	Uri music;
-//	music = R.raw.opening;
-//	private void playFromMediaPlayer() {
-//	    MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(), R.raw.opening);
-//	    mediaPlayer.start();
-//	}
+	// taki
+	// Uri music;
+	// music = R.raw.opening;
+	// private void playFromMediaPlayer() {
+	// MediaPlayer mediaPlayer = MediaPlayer.create(getApplicationContext(),
+	// R.raw.opening);
+	// mediaPlayer.start();
+	// }
 }
