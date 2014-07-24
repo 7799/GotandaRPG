@@ -1,6 +1,9 @@
 package com.gpl.rpg.GotandaRPG.BgmPlay;
 
 //import com.gpl.rpg.GotandaRPG.R;
+//MP3形式で再生する　（このような形で呼び出す
+//music = new GameMusic(getBaseContext(), R.raw.opening);
+//music.GameMusic("Start");
 
 import android.app.Activity;
 import android.content.Context;

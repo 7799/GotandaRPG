@@ -39,7 +39,7 @@ public final class StartScreenActivity extends Activity {
 	private EditText startscreen_enterheroname;
 
 //	GameMusic music;	//keep1
-		example.midiappli.PlayMidi emP = new PlayMidi("");
+		example.midiappli.PlayMidi emP = new PlayMidi();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -131,7 +131,7 @@ public final class StartScreenActivity extends Activity {
 		} else if (GotandaRPGApplication.DEVELOPMENT_FORCE_CONTINUEGAME) {
 			continueGame(false, Savegames.SLOT_QUICKSAVE, null);
 		}
-		emP.BgmPlay("");	//keep2
+		emP.BgmPlay("opening");	//keep2
 	}
 
 	private void updatePreferences() {
@@ -161,7 +161,7 @@ public final class StartScreenActivity extends Activity {
 //		music = new GameMusic(getBaseContext(), R.raw.opening);
 //		music.GameMusic("Start");
 		
-		emP.BgmPlay("");
+		emP.BgmPlay("opening");
 		
 
 		String playerName;
@@ -277,14 +277,14 @@ public final class StartScreenActivity extends Activity {
 	protected void onRestart() {
 		super.onRestart();
 		Toast.makeText(this, "onRestart", Toast.LENGTH_SHORT).show();
-		emP.BgmPlay("");	//keep2
+		emP.BgmPlay("opening");	//keep2
 	}
 
 	@Override
 	protected void onStart() {
 		super.onStart();
 		Toast.makeText(this, "onStart", Toast.LENGTH_SHORT).show();
-		emP.BgmPlay("");	//keep2
+		emP.BgmPlay("opening");	//keep2
 	}
 
 	@Override
@@ -297,7 +297,7 @@ public final class StartScreenActivity extends Activity {
 		// music.GameMusic("Stop");
 		
 //		music.GameMusicStop();	//keep1
-			emP.BgmStop();
+			emP.BgmPause();
 	}
 
 	@Override
@@ -309,7 +309,7 @@ public final class StartScreenActivity extends Activity {
 		// mBgm.stop();
 		// music.GameMusic("Stop");
 		
-			emP.BgmStop();
+			emP.BgmPause();
 //		music.GameMusicStop();	//keep1
 	}
 

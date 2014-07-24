@@ -7,6 +7,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gpl.rpg.GotandaRPG.Dialogs;
 import com.gpl.rpg.GotandaRPG.GotandaRPGApplication;
@@ -15,7 +16,10 @@ import com.gpl.rpg.GotandaRPG.context.ControllerContext;
 import com.gpl.rpg.GotandaRPG.context.WorldContext;
 import com.gpl.rpg.GotandaRPG.model.actor.Monster;
 
+import example.midiappli.PlayMidi;
+
 public final class MonsterEncounterActivity extends Activity {
+		example.midiappli.PlayMidi emP = new PlayMidi();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,4 +72,22 @@ public final class MonsterEncounterActivity extends Activity {
 			}
 		});
 	}
+
+	// taki
+	protected void onResume() {
+		super.onResume();
+		emP.BgmPlay("monster");	//keep2
+	}
+	protected void onStart() {
+		super.onResume();
+		emP.BgmPlay("monster");	//keep2
+	}
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Toast.makeText(this, "onStop", Toast.LENGTH_SHORT).show();
+		
+			emP.BgmStop();
+	}
+
 }

@@ -63,7 +63,7 @@ public final class MainActivity extends Activity implements
 	private WeakReference<Toast> lastToast = null;
 	private ContextMenuInfo lastSelectedMenu = null;
 	// MediaPlayer mBgm; //taki
-	example.midiappli.PlayMidi emP = new PlayMidi("field");
+	example.midiappli.PlayMidi emP = new PlayMidi();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -193,7 +193,7 @@ public final class MainActivity extends Activity implements
 		save(Savegames.SLOT_QUICKSAVE);
 
 		// taki mBgm.stop();
-		emP.BgmStop();
+		emP.BgmPause();
 
 	}
 
